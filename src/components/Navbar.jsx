@@ -60,12 +60,16 @@ export const Navbar = () => {
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 10)
+            // Close mobile menu when scrolling
+            if (isMenuOpen) {
+                setIsMenuOpen(false);
+            }
         }
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, []);
+    }, [isMenuOpen]);
     return (
         <nav 
         className={cn("fixed w-full z-40 transition duration-300",
