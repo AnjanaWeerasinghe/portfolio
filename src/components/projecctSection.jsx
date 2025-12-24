@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ExternalLink, Github, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -91,82 +91,123 @@ export const ProjectsSection = () => {
     const [selectedProject, setSelectedProject] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     
-    const projectsPerPage = 3;
+    const [isMobile, setIsMobile] = useState(false);
+    
+    // Check if device is mobile
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 640);
+        };
+        
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+    
+    // Mobile: horizontal scroll, Desktop: pagination
+    const getProjectsPerPage = () => {
+        if (typeof window !== 'undefined') {
+            if (window.innerWidth < 640) return projects.length; // Mobile - show all in one row
+            if (window.innerWidth < 1024) return 2; // Tablet
+        }
+        return 3; // Desktop
+    };
+    
+    const [projectsPerPage, setProjectsPerPage] = useState(getProjectsPerPage());
     const totalPages = Math.ceil(projects.length / projectsPerPage);
     
     const nextSlide = () => {
-        setCurrentIndex((prev) => (prev + 1) % totalPages);
+        if (isMobile) {
+            setCurrentIndex((prev) => Math.min(prev + 1, projects.length - 1));
+        } else {
+            setCurrentIndex((prev) => (prev + 1) % totalPages);
+        }
     };
     
     const prevSlide = () => {
-        setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages);
+        if (isMobile) {
+            setCurrentIndex((prev) => Math.max(prev - 1, 0));
+        } else {
+            setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages);
+        }
     };
+    
+    // Update projects per page on window resize
+    useEffect(() => {
+        const handleResize = () => {
+            const newProjectsPerPage = getProjectsPerPage();
+            if (newProjectsPerPage !== projectsPerPage) {
+                setProjectsPerPage(newProjectsPerPage);
+                setCurrentIndex(0); // Reset to first page
+            }
+        };
+        
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+        }
+    }, [projectsPerPage]);
 
     return (
-        <section id="projects" className="py-24 px-4 relative">
+        <section id="projects" className="py-12 sm:py-16 md:py-24 px-4 relative">
             <div className="container mx-auto max-w-6xl">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-center">
                     Featured <span className="text-primary">Projects</span>
                 </h2>
-                <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+                <p className="text-center text-muted-foreground mb-8 sm:mb-12 max-w-2xl mx-auto text-sm sm:text-base">
                     Here are some of the projects I've worked on recently. Click on a project to learn more.
                 </p>
                 
                 {/* Slider Container */}
                 <div className="relative">
-                    {/* Navigation Buttons */}
-                    {projects.length > projectsPerPage && (
+                    {/* Navigation Buttons - Only for desktop/tablet */}
+                    {!isMobile && projects.length > projectsPerPage && (
                         <>
                             <button 
                                 onClick={prevSlide}
-                                className="absolute left-0 md:-left-14 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-card shadow-lg hover:bg-primary/10 transition-all duration-300 hover:scale-110 border border-border"
+                                className="absolute -left-2 sm:left-0 lg:-left-14 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-3 rounded-full bg-card shadow-lg hover:bg-primary/10 transition-all duration-300 hover:scale-110 border border-border touch-manipulation"
                             >
-                                <ChevronLeft className="h-6 w-6 text-primary" />
+                                <ChevronLeft className="h-4 w-4 sm:h-6 sm:w-6 text-primary" />
                             </button>
                             <button 
                                 onClick={nextSlide}
-                                className="absolute right-0 md:-right-14 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-card shadow-lg hover:bg-primary/10 transition-all duration-300 hover:scale-110 border border-border"
+                                className="absolute -right-2 sm:right-0 lg:-right-14 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-3 rounded-full bg-card shadow-lg hover:bg-primary/10 transition-all duration-300 hover:scale-110 border border-border touch-manipulation"
                             >
-                                <ChevronRight className="h-6 w-6 text-primary" />
+                                <ChevronRight className="h-4 w-4 sm:h-6 sm:w-6 text-primary" />
                             </button>
                         </>
                     )}
                     
                     {/* Projects Slider */}
-                    <div className="overflow-hidden mx-8 md:mx-0">
-                        <div 
-                            className="flex transition-transform duration-500 ease-in-out"
-                            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-                        >
-                            {Array.from({ length: totalPages }).map((_, pageIndex) => (
-                                <div 
-                                    key={pageIndex}
-                                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-w-full px-1"
-                                >
-                                {projects
-                                    .slice(pageIndex * projectsPerPage, pageIndex * projectsPerPage + projectsPerPage)
-                                    .map((project) => (
+                    <div className={cn(
+                        "overflow-x-auto overflow-y-hidden",
+                        isMobile ? "mx-2" : "mx-4 sm:mx-8 lg:mx-0"
+                    )}>
+                        {isMobile ? (
+                            /* Mobile: Horizontal scrollable row - all projects visible */
+                            <div className="flex gap-4 pb-4 min-w-max">
+                                {projects.map((project) => (
                                     <div 
                                         key={project.id} 
-                                        className="group bg-card shadow-sm rounded-xl overflow-hidden card-hover cursor-pointer border border-border/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                                        className="flex-shrink-0 w-72 bg-card shadow-sm rounded-xl overflow-hidden card-hover cursor-pointer border border-border/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 touch-manipulation"
                                         onClick={() => setSelectedProject(project)}
                                     >      
-                                        <div className="h-48 overflow-hidden">
+                                        <div className="h-40 overflow-hidden">
                                             <img 
                                                 src={project.imageUrl} 
                                                 alt={project.title} 
                                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                             />
                                         </div>
-                                        <div className="p-5">
-                                            <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors duration-300">
+                                        <div className="p-4">
+                                            <h3 className="text-base font-semibold mb-2 group-hover:text-primary transition-colors duration-300 line-clamp-1">
                                                 {project.title}
                                             </h3>
-                                            <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                                                {truncateText(project.description, 100)}
+                                            <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
+                                                {truncateText(project.description, 80)}
                                             </p>
                                             <div className="flex flex-wrap gap-1.5">
-                                                {project.tags.slice(0, 3).map((tag, index) => (
+                                                {project.tags.slice(0, 2).map((tag, index) => (
                                                     <span 
                                                         key={index} 
                                                         className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md font-medium"
@@ -174,9 +215,9 @@ export const ProjectsSection = () => {
                                                         {tag}
                                                     </span>
                                                 ))}
-                                                {project.tags.length > 3 && (
+                                                {project.tags.length > 2 && (
                                                     <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-md">
-                                                        +{project.tags.length - 3}
+                                                        +{project.tags.length - 2}
                                                     </span>
                                                 )}
                                             </div>
@@ -184,21 +225,80 @@ export const ProjectsSection = () => {
                                     </div>
                                 ))}
                             </div>
-                        ))}
+                        ) : (
+                            /* Desktop/Tablet: Grid slider */
+                            <div 
+                                className="flex transition-transform duration-500 ease-in-out"
+                                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                            >
+                                {Array.from({ length: totalPages }).map((_, pageIndex) => (
+                                    <div 
+                                        key={pageIndex}
+                                        className={cn(
+                                            "grid gap-4 sm:gap-6 min-w-full px-1",
+                                            projectsPerPage === 1 && "grid-cols-1",
+                                            projectsPerPage === 2 && "grid-cols-1 sm:grid-cols-2",
+                                            projectsPerPage === 3 && "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                                        )}
+                                    >
+                                        {projects
+                                            .slice(pageIndex * projectsPerPage, pageIndex * projectsPerPage + projectsPerPage)
+                                            .map((project) => (
+                                            <div 
+                                                key={project.id} 
+                                                className="group bg-card shadow-sm rounded-xl overflow-hidden card-hover cursor-pointer border border-border/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 touch-manipulation"
+                                                onClick={() => setSelectedProject(project)}
+                                            >      
+                                                <div className="h-40 sm:h-48 overflow-hidden">
+                                                    <img 
+                                                        src={project.imageUrl} 
+                                                        alt={project.title} 
+                                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                    />
+                                                </div>
+                                                <div className="p-4 sm:p-5">
+                                                    <h3 className="text-base sm:text-lg font-semibold mb-2 group-hover:text-primary transition-colors duration-300">
+                                                        {project.title}
+                                                    </h3>
+                                                    <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+                                                        {truncateText(project.description, 100)}
+                                                    </p>
+                                                    <div className="flex flex-wrap gap-1.5">
+                                                        {project.tags.slice(0, 3).map((tag, index) => (
+                                                            <span 
+                                                                key={index} 
+                                                                className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md font-medium"
+                                                            >
+                                                                {tag}
+                                                            </span>
+                                                        ))}
+                                                        {project.tags.length > 3 && (
+                                                            <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-md">
+                                                                +{project.tags.length - 3}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
                     
-                    {/* Pagination Dots */}
-                    {totalPages > 1 && (
-                        <div className="flex justify-center gap-2 mt-8">
+                    {/* Pagination Dots - Only for desktop/tablet */}
+                    {!isMobile && totalPages > 1 && (
+                        <div className="flex justify-center gap-2 mt-6 sm:mt-8">
                             {Array.from({ length: totalPages }).map((_, index) => (
                                 <button
                                     key={index}
                                     onClick={() => setCurrentIndex(index)}
                                     className={cn(
-                                        "w-2.5 h-2.5 rounded-full transition-all duration-300",
+                                        "w-2.5 h-2.5 rounded-full transition-all duration-300 touch-manipulation",
                                         currentIndex === index 
-                                            ? "bg-primary w-8" 
+                                            ? "bg-primary w-6 sm:w-8" 
                                             : "bg-muted hover:bg-primary/50"
                                     )}
                                 />
@@ -207,32 +307,32 @@ export const ProjectsSection = () => {
                     )}
                     
                     {/* View All Projects Button */}
-                    <div className="flex justify-center mt-12">
+                    <div className="flex justify-center mt-8 sm:mt-12">
                         <a
                             href="https://github.com/AnjanaWeerasinghe"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-8 py-3 bg-card border border-primary text-primary rounded-full font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
+                            className="flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-card border border-primary text-primary rounded-full font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25 text-sm sm:text-base touch-manipulation"
                         >
-                            <Github className="h-5 w-5" />
-                            View All Projects on GitHub
+                            <Github className="h-4 w-4 sm:h-5 sm:w-5" />
+                            <span className="hidden sm:inline">View All Projects on GitHub</span>
+                            <span className="sm:hidden">View All Projects</span>
                         </a>
                     </div>
                 </div>
-            </div>
             
             {/* Project Popup Modal */}
             {selectedProject && (
                 <div 
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm"
                     onClick={() => setSelectedProject(null)}
                 >
                     <div 
-                        className="bg-card rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl animate-fade-in"
+                        className="bg-card rounded-xl sm:rounded-2xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden shadow-2xl animate-fade-in"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Modal Header Image */}
-                        <div className="relative h-64 overflow-hidden">
+                        <div className="relative h-48 sm:h-64 overflow-hidden">
                             <img 
                                 src={selectedProject.imageUrl} 
                                 alt={selectedProject.title}
@@ -240,40 +340,40 @@ export const ProjectsSection = () => {
                             />
                             <button 
                                 onClick={() => setSelectedProject(null)}
-                                className="absolute top-4 right-4 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
+                                className="absolute top-3 sm:top-4 right-3 sm:right-4 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors touch-manipulation"
                             >
-                                <X className="h-5 w-5 text-white" />
+                                <X className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                             </button>
                         </div>
                         
                         {/* Scrollable Content with Custom Scrollbar */}
-                        <div className="max-h-[calc(90vh-16rem)] overflow-y-auto scrollbar-thin">
-                            <div className="p-6">
-                                <h3 className="text-2xl font-bold mb-3">{selectedProject.title}</h3>
+                        <div className="max-h-[calc(95vh-12rem)] sm:max-h-[calc(90vh-16rem)] overflow-y-auto scrollbar-thin">
+                            <div className="p-4 sm:p-6">
+                                <h3 className="text-xl sm:text-2xl font-bold mb-3">{selectedProject.title}</h3>
                                 
                                 {/* Short Description */}
-                                <p className="text-muted-foreground mb-4 leading-relaxed">
+                                <p className="text-muted-foreground mb-4 leading-relaxed text-sm sm:text-base">
                                     {selectedProject.description}
                                 </p>
                                 
                                 {/* Detailed Description */}
                                 {selectedProject.detailedDescription && (
-                                    <div className="mb-6 p-4 bg-muted/30 rounded-lg border border-border/50">
-                                        <h4 className="text-sm font-semibold text-foreground mb-3">Project Details</h4>
-                                        <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
+                                    <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-muted/30 rounded-lg border border-border/50">
+                                        <h4 className="text-sm font-semibold text-foreground mb-2 sm:mb-3">Project Details</h4>
+                                        <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed whitespace-pre-line">
                                             {selectedProject.detailedDescription}
                                         </p>
                                     </div>
                                 )}
                             
                                 {/* Tags */}
-                                <div className="mb-6">
-                                    <h4 className="text-sm font-semibold text-foreground mb-3">Technologies Used</h4>
-                                    <div className="flex flex-wrap gap-2">
+                                <div className="mb-4 sm:mb-6">
+                                    <h4 className="text-sm font-semibold text-foreground mb-2 sm:mb-3">Technologies Used</h4>
+                                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                                         {selectedProject.tags.map((tag, index) => (
                                             <span 
                                                 key={index} 
-                                                className="text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-full font-medium"
+                                                className="text-xs sm:text-sm bg-primary/10 text-primary px-2 sm:px-3 py-1 sm:py-1.5 rounded-full font-medium"
                                             >
                                                 {tag}
                                             </span>
@@ -282,12 +382,12 @@ export const ProjectsSection = () => {
                                 </div>
                             
                                 {/* Action Buttons */}
-                                <div className="flex gap-4">
+                                <div className="flex gap-3 sm:gap-4">
                                     <a 
                                         href={selectedProject.githubUrl} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
-                                        className="flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-full font-medium hover:opacity-90 transition-opacity"
+                                        className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-primary text-primary-foreground rounded-full font-medium hover:opacity-90 transition-opacity text-sm sm:text-base touch-manipulation"
                                     >
                                         <Github className="h-4 w-4" />
                                         View Code
@@ -298,6 +398,7 @@ export const ProjectsSection = () => {
                     </div>
                 </div>
             )}
-        </section>
+        )  
+    </section>
     );
-};  
+};

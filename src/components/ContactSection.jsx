@@ -183,7 +183,7 @@ export const ContactSection = () => {
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
-                                        className="w-full px-4 py-3 rounded-lg bg-muted border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-300"
+                                        className="w-full px-4 py-3 rounded-lg bg-muted border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-300 placeholder:text-center sm:placeholder:text-left"
                                         placeholder="John Doe"
                                     />
                                 </div>
@@ -198,7 +198,7 @@ export const ContactSection = () => {
                                         value={formData.email}
                                         onChange={handleChange}
                                         required
-                                        className="w-full px-4 py-3 rounded-lg bg-muted border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-300"
+                                        className="w-full px-4 py-3 rounded-lg bg-muted border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-300 placeholder:text-center sm:placeholder:text-left"
                                         placeholder="john@example.com"
                                     />
                                 </div>
@@ -215,7 +215,7 @@ export const ContactSection = () => {
                                     value={formData.subject}
                                     onChange={handleChange}
                                     required
-                                    className="w-full px-4 py-3 rounded-lg bg-muted border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-300"
+                                    className="w-full px-4 py-3 rounded-lg bg-muted border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-300 placeholder:text-center sm:placeholder:text-left"
                                     placeholder="Project Inquiry"
                                 />
                             </div>
@@ -231,7 +231,7 @@ export const ContactSection = () => {
                                     onChange={handleChange}
                                     required
                                     rows={5}
-                                    className="w-full px-4 py-3 rounded-lg bg-muted border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-300 resize-none"
+                                    className="w-full px-4 py-3 rounded-lg bg-muted border border-border/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all duration-300 resize-none placeholder:text-center sm:placeholder:text-left"
                                     placeholder="Tell me about your project or just say hello..."
                                 />
                             </div>

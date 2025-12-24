@@ -37,15 +37,15 @@ export const Footer = () => {
     return (
         <footer className="bg-card border-t border-border/50 py-8 sm:py-12 px-4 sm:px-6">
             <div className="container mx-auto max-w-6xl">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 text-left">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 text-center sm:text-left">
                     {/* Brand Section */}
                     <div className="space-y-3 sm:space-y-4 sm:col-span-2 lg:col-span-1">
                         <h3 className="text-lg sm:text-xl font-bold text-gradient">Anjana Weerasinghe</h3>
-                        <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed max-w-md">
+                        <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed max-w-md mx-auto sm:mx-0">
                             Full Stack Developer passionate about creating innovative solutions 
                             and bringing ideas to life through code.
                         </p>
-                        <div className="flex gap-3 sm:gap-4 justify-start flex-wrap">
+                        <div className="flex gap-3 sm:gap-4 justify-center sm:justify-start flex-wrap">
                             {socialLinks.map((social, index) => (
                                 <a
                                     key={index}
@@ -69,8 +69,7 @@ export const Footer = () => {
                                 <a
                                     key={index}
                                     href={link.href}
-                                    className="text-muted-foreground hover:text-primary transition-colors duration-300 text-xs sm:text-sm text-left py-1 touch-manipulation"
-                                >
+                                    className="text-muted-foreground hover:text-primary transition-colors duration-300 text-xs sm:text-sm text-center sm:text-left py-1 touch-manipulation">
                                     {link.label}
                                 </a>
                             ))}
@@ -81,11 +80,11 @@ export const Footer = () => {
                     <div className="space-y-3 sm:space-y-4">
                         <h4 className="text-base sm:text-lg font-semibold">Get In Touch</h4>
                         <div className="space-y-2">
-                            <p className="text-muted-foreground text-xs sm:text-sm text-left break-words">
+                            <p className="text-muted-foreground text-xs sm:text-sm text-center sm:text-left break-words">
                                 <strong className="text-foreground">Email:</strong><br className="sm:hidden" />
                                 <span className="sm:ml-1">anjanaw2001@gmail.com</span>
                             </p>
-                            <p className="text-muted-foreground text-xs sm:text-sm text-left">
+                            <p className="text-muted-foreground text-xs sm:text-sm text-center sm:text-left">
                                 <strong className="text-foreground">Location:</strong><br className="sm:hidden" />
                                 <span className="sm:ml-1">Colombo, Sri Lanka</span>
                             </p>
