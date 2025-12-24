@@ -397,8 +397,7 @@ export const ProjectsSection = () => {
                         </div>
                     </div>
                 </div>
-            )}
-        )  
+            )}  
     </section>
     );
 };

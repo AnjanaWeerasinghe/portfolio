@@ -124,11 +124,11 @@ export const ContactSection = () => {
                             
                             <div className="space-y-6">
                                 {contactInfo.map((item, index) => (
-                                    <div key={index} className="flex items-center justify-center gap-4">
+                                    <div key={index} className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-center sm:text-left">
                                         <div className="p-3 rounded-full bg-primary/10">
                                             <item.icon className="h-5 w-5 text-primary" />
                                         </div>
-                                        <div className="text-center">
+                                        <div className="text-center sm:text-left">
                                             <p className="text-sm text-muted-foreground">{item.label}</p>
                                             {item.href ? (
                                                 <a 
