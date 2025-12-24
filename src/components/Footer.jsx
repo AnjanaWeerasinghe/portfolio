@@ -108,7 +108,7 @@ export const Footer = () => {
                             © {currentYear} Anjana Weerasinghe. All rights reserved.
                         </p>
                         <p className="text-xs sm:text-sm text-muted-foreground flex items-center justify-center gap-1 order-1 sm:order-2">
-                            Made with <Heart className="h-3 w-3 text-red-500 fill-current" /> using React & Tailwind CSS
+                            Made using React & Tailwind CSS
                         </p>
                     </div>
                 </div>
