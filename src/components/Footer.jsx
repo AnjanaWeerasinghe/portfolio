@@ -35,41 +35,41 @@ export const Footer = () => {
     ];
 
     return (
-        <footer className="bg-card border-t border-border/50 py-12 px-4">
+        <footer className="bg-card border-t border-border/50 py-8 sm:py-12 px-4 sm:px-6">
             <div className="container mx-auto max-w-6xl">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 text-left">
                     {/* Brand Section */}
-                    <div className="space-y-4">
-                        <h3 className="text-xl font-bold text-gradient">Anjana Weerasinghe</h3>
-                        <p className="text-muted-foreground text-sm leading-relaxed">
+                    <div className="space-y-3 sm:space-y-4 sm:col-span-2 lg:col-span-1">
+                        <h3 className="text-lg sm:text-xl font-bold text-gradient">Anjana Weerasinghe</h3>
+                        <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed max-w-md">
                             Full Stack Developer passionate about creating innovative solutions 
                             and bringing ideas to life through code.
                         </p>
-                        <div className="flex gap-4 justify-start">
+                        <div className="flex gap-3 sm:gap-4 justify-start flex-wrap">
                             {socialLinks.map((social, index) => (
                                 <a
                                     key={index}
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-2 rounded-full bg-muted hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-110"
+                                    className="p-2 sm:p-2.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-110 touch-manipulation"
                                     aria-label={social.label}
                                 >
-                                    <social.icon className="h-4 w-4" />
+                                    <social.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                 </a>
                             ))}
                         </div>
                     </div>
 
                     {/* Quick Links */}
-                    <div className="space-y-4">
-                        <h4 className="text-lg font-semibold">Quick Links</h4>
-                        <nav className="flex flex-col space-y-2">
+                    <div className="space-y-3 sm:space-y-4">
+                        <h4 className="text-base sm:text-lg font-semibold">Quick Links</h4>
+                        <nav className="flex flex-col space-y-1.5 sm:space-y-2">
                             {quickLinks.map((link, index) => (
                                 <a
                                     key={index}
                                     href={link.href}
-                                    className="text-muted-foreground hover:text-primary transition-colors duration-300 text-sm text-left"
+                                    className="text-muted-foreground hover:text-primary transition-colors duration-300 text-xs sm:text-sm text-left py-1 touch-manipulation"
                                 >
                                     {link.label}
                                 </a>
@@ -78,22 +78,24 @@ export const Footer = () => {
                     </div>
 
                     {/* Contact Info */}
-                    <div className="space-y-4">
-                        <h4 className="text-lg font-semibold">Get In Touch</h4>
+                    <div className="space-y-3 sm:space-y-4">
+                        <h4 className="text-base sm:text-lg font-semibold">Get In Touch</h4>
                         <div className="space-y-2">
-                            <p className="text-muted-foreground text-sm text-left">
-                                <strong>Email:</strong> anjanaw2001@gmail.com
+                            <p className="text-muted-foreground text-xs sm:text-sm text-left break-words">
+                                <strong className="text-foreground">Email:</strong><br className="sm:hidden" />
+                                <span className="sm:ml-1">anjanaw2001@gmail.com</span>
                             </p>
-                            <p className="text-muted-foreground text-sm text-left">
-                                <strong>Location:</strong> Colombo, Sri Lanka
+                            <p className="text-muted-foreground text-xs sm:text-sm text-left">
+                                <strong className="text-foreground">Location:</strong><br className="sm:hidden" />
+                                <span className="sm:ml-1">Colombo, Sri Lanka</span>
                             </p>
                         </div>
                         <div className="pt-2">
                             <a 
                                 href="#contact" 
-                                className="inline-flex items-center gap-2 text-sm cosmic-button"
+                                className="inline-flex items-center gap-2 text-xs sm:text-sm cosmic-button w-full sm:w-auto justify-center sm:justify-start py-2 px-4 sm:py-1 sm:px-2 touch-manipulation"
                             >
-                                <Mail className="h-4 w-4" />
+                                <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                 Send Message
                             </a>
                         </div>
@@ -101,13 +103,13 @@ export const Footer = () => {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="mt-8 pt-8 border-t border-border/50">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                        <p className="text-sm text-muted-foreground">
+                <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-border/50">
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-center sm:text-left">
+                        <p className="text-xs sm:text-sm text-muted-foreground order-2 sm:order-1">
                             © {currentYear} Anjana Weerasinghe. All rights reserved.
                         </p>
-                        <p className="text-sm text-muted-foreground flex items-center gap-1">
-                            Made with using React & Tailwind CSS
+                        <p className="text-xs sm:text-sm text-muted-foreground flex items-center justify-center gap-1 order-1 sm:order-2">
+                            Made with <Heart className="h-3 w-3 text-red-500 fill-current" /> using React & Tailwind CSS
                         </p>
                     </div>
                 </div>
