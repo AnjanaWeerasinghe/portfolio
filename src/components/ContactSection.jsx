@@ -96,13 +96,9 @@ export const ContactSection = () => {
         {
             icon: Linkedin,
             label: "LinkedIn",
-            href: "https://linkedin.com/in/anjanaweerasinghe"
+            href: "https://www.linkedin.com/in/anjana-weerasinghe-391661227/"
         },
-        {
-            icon: Twitter,
-            label: "Twitter",
-            href: "https://twitter.com/anjanaweerasinghe"
-        }
+       
     ];
 
     return (

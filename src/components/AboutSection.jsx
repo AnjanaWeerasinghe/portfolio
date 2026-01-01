@@ -27,7 +27,7 @@ export const AboutSection = () => {
                                 {" "}
                                 Get in Touch
                             </a>
-                            <a href="/cv/AnjanaWeerasinghe.pdf" download="AnjanaWeerasinghe_CV.pdf" className="px-5 py-2 rounded-full border border-primary text-primary hover:bg-primary/10 transition-colors duration-300 ">
+                            <a href="/cv/Anjana_Weerasinghe_Cv.pdf" download="Anjana_Weerasinghe_Cv.pdf" className="px-5 py-2 rounded-full border border-primary text-primary hover:bg-primary/10 transition-colors duration-300 ">
                                 {" "}
                                 Download CV 
                             </a>
